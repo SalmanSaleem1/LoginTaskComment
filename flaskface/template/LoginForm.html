@@ -1,0 +1,49 @@
+{% extends 'Layout.html'%}
+
+{% block content %}
+
+<center>
+    <div class="content-section" style="width: 600px">
+    <form action="" method="post">
+        <fieldset>
+            {{ form.hidden_tag() }}
+            <legend>Login</legend>
+            <div class="form-group" style="width: 500px">
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control input-sm is-invalid", placeholder= "Email")}}
+                    {% for error in form.email.errors %}
+                        <div class="alert-message block-message error">
+                            <span class="badge badge-danger">
+                                {{ error }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {{ form.email(class="form-control input-sm", placeholder= "Email")}}
+                {% endif %}
+            </div>
+            <div class="form-group" style="width: 500px">
+                {% if form.password.errors %}
+                    {{ form.password(class="form-control input-sm is-invalid", placeholder= "Password")}}
+                    {% for error in form.password.errors %}
+                        <div class="alert-message block-message error">
+                            <span class="badge badge-danger">
+                                {{ error }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {{ form.password(class="form-control input-sm", placeholder= "Password")}}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class ="btn btn-outline-info")}}
+            <a href="{{ url_for('user.reset_request')}}"><small>Forgot password?</small></a>
+        </div>
+    </form>
+</div>
+</center>
+
+
+{% endblock content %}
