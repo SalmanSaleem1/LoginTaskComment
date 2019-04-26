@@ -1,1 +1,1 @@
-web: gunicorn flaskface.run:app --log-file=-
+web: gunicorn flaskface.run:app
