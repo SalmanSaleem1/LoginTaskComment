@@ -1,6 +1,23 @@
 {% extends 'Layout.html'%}
+<style>
+    #rcorners1 {
+        border-radius: 25px;
+        background: #73AD21;
+        padding: 20px;
+        width: 200px;
+        height: 150px;
+    }
 
+    #rcorners2 {
+        border-radius: 25px;
+        border: 2px solid #73AD21;
+        padding: 20px;
+        width: 200px;
+        height: 150px;
+    }
+</style>
 {% block content %}
+
 <article class="media content-section">
     <img class="rounded-circle account-img"
          src="{{ url_for('static', filename='profile_pic/'+ post.author.image_file)}}">
@@ -41,18 +58,18 @@
         </form>
 
         {% for com in comm %}
+        <a href="">{{ com.user_id }}</a>
 
         <div id="mydiv" style="background: #3A7734" onmouseover="this.style.background='skyblue';"
              onmouseout="this.style.background='white';">
-            <a href="">{{ com.user_id }}</a>
-            <h1>{{ com.body }}</h1>
+            <hr>
+            <h5>{{ com.body }}</h5>
+            <hr>
         </div>
+
         {% endfor %}
-
     </div>
 
-
-    </div>
 </article>
 
 
