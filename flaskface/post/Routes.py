@@ -1,11 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, abort, flash
-from flaskface.post.Forms import NewPostForm
-from flaskface.Models import Post, PostSchema
+from flask import Blueprint, render_template, redirect, url_for, abort, flash, request
+from flaskface.post.Forms import NewPostForm, AddCommentForm
+from flaskface.Models import Post, PostSchema, Comment
 from flaskface import db
 from flask_login import current_user, login_required
 from marshmallow import pprint
 from flaskface.constant.app_constant import Constants
-
 
 post = Blueprint('post', __name__)
 
@@ -13,7 +12,6 @@ post = Blueprint('post', __name__)
 @post.route('/newpost', methods=['POST', 'GET'])
 @login_required
 def new_post():
-    
     form = NewPostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
@@ -27,15 +25,16 @@ def new_post():
     return render_template('NewPost.html', title='New Post', form=form, legend='New Post')
 
 
-@post.route('/newpost/<int:post_id>', methods=['POST', 'GET'])
-@login_required
-def post_detail(post_id):
-    post = Post.query.get_or_404(post_id)
-    schema = PostSchema()
-    result = schema.dump(post)
-    pprint(result.data)
-    pprint(result.errors)
-    return render_template('Post.html', title='Post', post=post)
+# @post.route('/newpost/<int:post_id>', methods=['POST', 'GET'])
+# @login_required
+# def post_detail(post_id):
+#     post = Post.query.get_or_404(post_id)
+#     schema = PostSchema()
+#     result = schema.dump(post)
+#     pprint(result.data)
+#     pprint(result.errors)
+#
+#     return render_template('Post.html', title='Post', post=post)
 
 
 @post.route('/newpost/<int:post_id>/update', methods=['POST', 'GET'])
@@ -74,4 +73,16 @@ def post_delete(post_id):
     return redirect(url_for('main.home'))
 
 
-
+@post.route("/post/<int:post_id>", methods=["GET", "POST"])
+@login_required
+def post_detail(post_id):
+    post = Post.query.get_or_404(post_id)
+    comm = Comment.query.filter_by(post_id=post.id)
+    form = AddCommentForm()
+    if form.validate_on_submit():
+        comment = Comment(body=form.body.data, post_id=post_id, user_id=current_user.username)
+        db.session.add(comment)
+        db.session.commit()
+        flash("Your comment has been added to the post", "success")
+        return redirect(url_for("post.post_detail", post_id=post.id))
+    return render_template("Post.html", title="Comment Post", form=form, post=post, post_id=post_id, comm=comm)

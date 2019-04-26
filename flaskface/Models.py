@@ -65,6 +65,17 @@ class Post(db.Model):
         return f"Post('{self.title}', '{self.create_at}', '{self.user_id}')"
 
 
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(100), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Comment('{self.body}', '{self.timestamp}', '{self.post_id}', '{self.user_id}')"
+
+
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User

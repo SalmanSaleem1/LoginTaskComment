@@ -2,7 +2,7 @@
 
 {% block content %}
 {% for post in posts.items %}
-
+<div class="meid-body">
 <article class="media content-section">
     <img class="rounded-circle account-img"
          src="{{ url_for('static', filename='profile_pic/' + post.author.image_file) }}">
@@ -15,9 +15,12 @@
         <h2><a class="article-title" href="{{ url_for('post.post_detail', post_id=post.id)}}">{{ post.title}}</a>
         </h2>
         <p class="article-content">{{ post.content }}</p>
+
     </div>
 
 </article>
+
+    </div>
 {% endfor %}
 
 {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
